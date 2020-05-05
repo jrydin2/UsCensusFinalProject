@@ -25,16 +25,16 @@
 
     <TextView
         android:id="@+id/EnterYear"
-        android:layout_width="66dp"
-        android:layout_height="19dp"
+        android:layout_width="250dp"
+        android:layout_height="20dp"
         android:layout_marginStart="173dp"
         android:layout_marginLeft="173dp"
         android:layout_marginTop="81dp"
         android:layout_marginEnd="173dp"
         android:layout_marginRight="173dp"
-        android:text="Enter Year"
-        android:textAlignment="center"
         android:gravity="center_horizontal"
+        android:text="Enter a year between 2014 and 2060"
+        android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/USPopulationEstimater" />
