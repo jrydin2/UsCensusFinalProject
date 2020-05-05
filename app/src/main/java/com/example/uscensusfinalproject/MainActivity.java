@@ -51,11 +51,12 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(JSONArray response) {
                 try  {
+                    JSONArray a = response.getJSONArray(1);
                     if (year == null)  {
-                        estimatedPopulation.setText("Invalid Input");
+                        estimatedPopulation.setText("Type a year between 2014 and 2060 as a number");
                     }
                     if (year.length() != 4)  {
-                        estimatedPopulation.setText("Invalid Input");
+                        estimatedPopulation.setText("Type a year between 2014 and 2060");
                     }
                     boolean check = false;
                     for (int n = 2014; n < 2061; n++)  {
@@ -65,28 +66,34 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                     if (!check)  {
-                        estimatedPopulation.setText("Invalid Input");
+                        estimatedPopulation.setText("Type a year between 2014 and 2060 as a number");
                     }  else  {
-                        for (int i = 0; i < 47; i++)  {
-                            JSONArray arr = response.getJSONArray(i);
-                            JSONObject obj = arr.getJSONObject(1);
-                            String comp = obj.toString();
-                            if (comp.equals(year))  {
-                                String resp = response.getJSONArray(i).getJSONObject(0).toString();
-                                estimatedPopulation.setText(resp);
+                        for (int i = 1; i < 48; i++)  {
+                            String str = response.getJSONArray(i).toString().substring(14, 18);
+                            if (str.equals(year))  {
+                                if (Integer.parseInt(year) > 2020)  {
+                                    String output = response.getJSONArray(i).toString().substring(2, 11);
+                                    estimatedPopulation.setText("The projected future population of the US in " + year + " is "+output);
+                                }  else if (Integer.parseInt(year) < 2020)  {
+                                    String output = response.getJSONArray(i).toString().substring(2, 11);
+                                    estimatedPopulation.setText("The estimated population of the US in " + year + " was "+output);
+                                }  else if (Integer.parseInt(year) == 2020)  {
+                                    String output = response.getJSONArray(i).toString().substring(2, 11);
+                                    estimatedPopulation.setText("The current estimated population of the US in is "+output);
+                                }
                             }
                         }
                     }
                 }  catch(JSONException e)  {
                     e.printStackTrace();
-                    estimatedPopulation.setText("Unknown problem. Restart the app and try again");
+                    estimatedPopulation.setText("Major problem. Restart the app and try again");
                 }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                estimatedPopulation.setText("Unknown problem. Restart the app and try again");
+                estimatedPopulation.setText("Major problem. Restart the app and try again");
 
             }
         });
