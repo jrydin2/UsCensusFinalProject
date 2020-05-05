@@ -17,7 +17,6 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -47,23 +46,18 @@ public class MainActivity extends AppCompatActivity {
         this.year = entry.getText().toString();
         System.out.println(this.year);
         String url = "api.census.gov/data/2014/pep/projpop?get=POP,YEAR&for=us:1&key=2c993c25d8af778233084ccd91edf018f42ded83";
-        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONArray>() {
+        JsonArrayRequest request = new JsonArrayRequest(url,
+                new Response.Listener<org.json.JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
-                        for (int i = 0; i < 48; i++) {
-                            try {
-                                if (response.getJSONArray(i).getString(1) == year) {
-                                    estimatedPopulation.setText(response.getJSONArray(i).getString(0));
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                        estimatedPopulation.setText("YES");
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                if (year == null)  {
+                    estimatedPopulation.setText("Invalid Input");
+                }
                 if (year.length() != 4)  {
                     estimatedPopulation.setText("Invalid Input");
                 }

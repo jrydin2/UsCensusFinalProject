@@ -47,7 +47,7 @@
         android:layout_marginLeft="120dp"
         android:layout_marginEnd="120dp"
         android:layout_marginRight="120dp"
-        android:layout_marginBottom="119dp"
+        android:layout_marginBottom="72dp"
         android:gravity="center_horizontal"
         android:text="Estimated Population"
         android:textAlignment="center"
@@ -85,10 +85,10 @@
         android:text="Go"
         app:layout_constraintBottom_toTopOf="@+id/estimatedPopulation"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/yearEntry"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/yearEntry"
