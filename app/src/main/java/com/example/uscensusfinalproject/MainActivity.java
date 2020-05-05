@@ -25,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView estimatedPopulation;
     private RequestQueue mQueue;
     private String year;
+    private EditText entry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void jsonParse() {
-        EditText entry = findViewById(R.id.yearEntry);
+        entry = findViewById(R.id.yearEntry);
         estimatedPopulation = findViewById(R.id.population);
         this.year = entry.getText().toString();
         System.out.println(this.year);
@@ -63,7 +64,19 @@ public class MainActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                estimatedPopulation.setText("Invalid Year");
+                if (year.length() != 4)  {
+                    estimatedPopulation.setText("Invalid Input");
+                }
+                boolean check = false;
+                for (int n = 2014; n <= 2060; n++)  {
+                    String date = String.valueOf(n);
+                    if (year.equals(date))  {
+                        check = true;
+                    }
+                }
+                if (!check)  {
+                    estimatedPopulation.setText("Invalid Input");
+                }
             }
         });
         mQueue.add(request);
