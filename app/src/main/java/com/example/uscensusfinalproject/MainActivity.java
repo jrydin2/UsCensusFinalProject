@@ -12,28 +12,25 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 
 public class MainActivity extends AppCompatActivity {
     private TextView estimatedPopulation;
     private RequestQueue mQueue;
     private String year;
-    private EditText entry;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        entry = findViewById(R.id.yearEntry);
-        estimatedPopulation = findViewById(R.id.population);
-        this.year = entry.getText().toString();
-        System.out.println(this.year);
         Button button = findViewById(R.id.go);
-
         mQueue = Volley.newRequestQueue(this);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -44,37 +41,29 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void jsonParse() {
-        year = entry.getText().toString();
+        EditText entry = findViewById(R.id.yearEntry);
         estimatedPopulation = findViewById(R.id.population);
+        this.year = entry.getText().toString();
+        System.out.println(this.year);
         String url = "api.census.gov/data/2014/pep/projpop?get=POP,YEAR&for=us:1&key=2c993c25d8af778233084ccd91edf018f42ded83";
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
-                new Response.Listener<JSONObject>() {
+        JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null,
+                new Response.Listener<JSONArray>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String toDisplay = response.getString("POP");
-                            estimatedPopulation.setText(toDisplay);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                    public void onResponse(JSONArray response) {
+                        for (int i = 0; i < 48; i++) {
+                            try {
+                                if (response.getJSONArray(i).getString(1) == year) {
+                                    estimatedPopulation.setText(response.getJSONArray(i).getString(0));
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (year.length() != 4)  {
-                    estimatedPopulation.setText("Invalid Input");
-                }
-                boolean check = false;
-                for (int n = 2014; n <= 2060; n++)  {
-                    String date = String.valueOf(n);
-                    if (year.equals(date))  {
-                        check = true;
-                    }
-                }
-                if (!check)  {
-                    estimatedPopulation.setText("Invalid Input");
-                }
+                estimatedPopulation.setText("Invalid Year");
             }
         });
         mQueue.add(request);
