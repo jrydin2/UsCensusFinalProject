@@ -17,6 +17,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 
@@ -44,17 +45,47 @@ public class MainActivity extends AppCompatActivity {
         estimatedPopulation = findViewById(R.id.population);
         this.year = entry.getText().toString();
         System.out.println(this.year);
-        String url = "api.census.gov/data/2014/pep/projpop?get=POP,YEAR&for=us:1&key=2c993c25d8af778233084ccd91edf018f42ded83";
+        String url = "https://api.census.gov/data/2014/pep/projpop?get=POP,YEAR&for=us:1&key=2c993c25d8af778233084ccd91edf018f42ded83";
         JsonArrayRequest request = new JsonArrayRequest(url,
         new Response.Listener<org.json.JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
-                estimatedPopulation.setText("YES");
+                try  {
+                    if (year == null)  {
+                        estimatedPopulation.setText("Invalid Input");
+                    }
+                    if (year.length() != 4)  {
+                        estimatedPopulation.setText("Invalid Input");
+                    }
+                    boolean check = false;
+                    for (int n = 2014; n < 2061; n++)  {
+                        String date = String.valueOf(n);
+                        if (year.equals(date))  {
+                            check = true;
+                        }
+                    }
+                    if (!check)  {
+                        estimatedPopulation.setText("Invalid Input");
+                    }  else  {
+                        for (int i = 0; i < 47; i++)  {
+                            JSONArray arr = response.getJSONArray(i);
+                            JSONObject obj = arr.getJSONObject(1);
+                            String comp = obj.toString();
+                            if (comp.equals(year))  {
+                                String resp = response.getJSONArray(i).getJSONObject(0).toString();
+                                estimatedPopulation.setText(resp);
+                            }
+                        }
+                    }
+                }  catch(JSONException e)  {
+                    e.printStackTrace();
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                estimatedPopulation.setText("Unknown problem. Restart the app and try again");
 
             }
         });
