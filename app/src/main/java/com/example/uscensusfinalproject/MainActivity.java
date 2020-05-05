@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button button = findViewById(R.id.go);
-        mQueue = Volley.newRequestQueue(this);
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,32 +46,19 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(this.year);
         String url = "api.census.gov/data/2014/pep/projpop?get=POP,YEAR&for=us:1&key=2c993c25d8af778233084ccd91edf018f42ded83";
         JsonArrayRequest request = new JsonArrayRequest(url,
-                new Response.Listener<org.json.JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        estimatedPopulation.setText("YES");
-                    }
-                }, new Response.ErrorListener() {
+        new Response.Listener<org.json.JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                estimatedPopulation.setText("YES");
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                if (year == null)  {
-                    estimatedPopulation.setText("Invalid Input");
-                }
-                if (year.length() != 4)  {
-                    estimatedPopulation.setText("Invalid Input");
-                }
-                boolean check = false;
-                for (int n = 2014; n <= 2060; n++)  {
-                    String date = String.valueOf(n);
-                    if (year.equals(date))  {
-                        check = true;
-                    }
-                }
-                if (!check)  {
-                    estimatedPopulation.setText("Invalid Input");
-                }
+                error.printStackTrace();
+
             }
         });
+        mQueue = Volley.newRequestQueue(this);
         mQueue.add(request);
     }
 }
