@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }  catch(JSONException e)  {
                     e.printStackTrace();
+                    estimatedPopulation.setText("Unknown problem. Restart the app and try again");
                 }
             }
         }, new Response.ErrorListener() {
